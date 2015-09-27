@@ -1,6 +1,6 @@
 # REST API TAN-Server
 
-## Request register a new Device
+## Request register a new device
 
 `POST /rest/accounts/{accountId}/push-device`
 Header: OAuth Authorization: user must match
@@ -30,7 +30,7 @@ SC:201 OK no content
 SC:422 invalid TAN
 
 
-## Check Push Options For user
+## Check push options for user
  
 `GET /rest/accounts/{accountId}`
 Header: OAuth Authorization: user must match
@@ -75,7 +75,7 @@ Header: OAuth Authorization: user must match
 SC: 204
 SC: 401
 
-## Send SMS to a UserId (Request on DIKS System)
+## Send SMS to a UserId (outgoing request to send a SMS)
 
 `POST /sms/{accountId}`
 Header: OAuth Authorization: user must match
