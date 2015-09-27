@@ -36,6 +36,10 @@ public class AccountTANSResourceTest extends BaseARTTest {
 		Response tanReqestResponse = given().body(tanRequest).when().post("/rest/accounts/{accountId}/tans", "foobar").then().statusCode(200).and().body("links['register-device']", endsWith("rest/rest/accounts/adorsys/push-device/REGID")).extract().response();
 		String consumePath = tanReqestResponse.jsonPath().get("links['consume']");
 		assertNotNull("consumePath", consumePath);
+		String tan = tanReqestResponse.header("x-test-tan");
+		assertNotNull("tan", tan);
+		
+		given().when().post(consumePath.replaceAll("TAN", tan)).then().statusCode(204);
 	}
 
 }

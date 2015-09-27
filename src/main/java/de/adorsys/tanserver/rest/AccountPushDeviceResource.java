@@ -1,5 +1,7 @@
 package de.adorsys.tanserver.rest;
 
+import java.util.Date;
+
 import javax.inject.Singleton;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -9,13 +11,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import de.adorsys.tanserver.SystemSettings;
+import de.adorsys.tanserver.model.TANForAccountAndRequestId;
+import de.adorsys.tanserver.repository.TANForAccountAndRequestIdRepository;
 import de.adorsys.tanserver.rest.to.ActivateDeviceRegistrationTo;
 import de.adorsys.tanserver.rest.to.DeviceRegistrationRequestTo;
 
 @Path("/rest/accounts/{accountId}/push-device")
 @Singleton
 public class AccountPushDeviceResource {
+	
+	TANForAccountAndRequestIdRepository tanRepo;
 
 	@POST
 	@Path("{registrationId}")
@@ -31,6 +39,13 @@ public class AccountPushDeviceResource {
 				uriInfo.getBaseUriBuilder().path(AccountPushDeviceResource.class)
 						.path(AccountPushDeviceResource.class, "registerANewDevice").build(accountId, "REGID")
 						.toString());
+		String tan = RandomStringUtils.random(4, "1234567890");
+		TANForAccountAndRequestId tanForAccountAndRequestId = new TANForAccountAndRequestId();
+		tanForAccountAndRequestId.setAccountId(accountId);
+		tanForAccountAndRequestId.setRequestId("device-reg");
+		tanForAccountAndRequestId.setTan(tan);
+		tanForAccountAndRequestId.setTimestamp(new Date());
+		tanRepo.save(tanForAccountAndRequestId);
 		
 		ResponseBuilder ok = Response.ok(deviceRegistrationRequestTo);
 		if (SystemSettings.TAN_DEV_HEADER) {

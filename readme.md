@@ -77,18 +77,15 @@ SC: 401
 
 ## Send SMS to a UserId (Request on DIKS System)
 
-`POST /sms/{userid}`
+`POST /sms/{accountId}`
 Header: OAuth Authorization: user must match
 
-Request Body:
+Request Body: `text/plain`
 
-	{
-		message: "SMS TAN Message"
-	}
+	SMS TAN Message
 
 SC: 404 Unknown User
-SC: 400 Unknown Phonenumber for Account
-SC: 201 Message was send
+SC: 204 Message was send
 
 
 
