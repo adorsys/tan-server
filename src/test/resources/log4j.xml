@@ -16,11 +16,11 @@
     </category>
     
     <category name="org.apache.http.wire">
-        <priority value="DEBUG" />
+        <priority value="INFO" />
     </category>
 
     <root>
-        <priority value="DEBUG" />
+        <priority value="INFO" />
         <appender-ref ref="CONSOLE" />
     </root>
 

@@ -1,20 +1,20 @@
 # REST API TAN-Server
 
-## Register a new Device
+## Request register a new Device
 
-`POST /rest/accounts/{userid}/push-device`
+`POST /rest/accounts/{accountId}/push-device`
 Header: OAuth Authorization: user must match
 
 Response:
 SC: 200
 
 	{
-		links: {
-			"register-device": /rest/tans/{userid}/push-device/{registrationId}
+		_links: {
+			"register-device": "/rest/tans/{userid}/push-device/{registrationId}"
 		}
 	}
 
-## Register a device
+## Activate device registration with a TAN
 
 `POST /rest/accounts/{userid}/push-device/{registrationId}`
 Header: OAuth Authorization: user must match
@@ -22,12 +22,17 @@ Header: OAuth Authorization: user must match
 Request Body:
 
 	{
-		activationTAN: "12345"
+		activationTAN: "12345",
+		deviceType: "IOS|ANDROID"
 	}
+	
+SC:201 OK no content
+SC:422 invalid TAN
+
 
 ## Check Push Options For user
  
-`GET /rest/accounts/{userid}/tans`
+`GET /rest/accounts/{accountId}`
 Header: OAuth Authorization: user must match
 
 Response Body
@@ -38,27 +43,36 @@ Response Body
 
 ## Request a new TAN
 
-`POST /rest/accounts/{userid}/tans`
+`POST /rest/accounts/{accountId}/tans`
 Header: OAuth Authorization: user must match
 
 Request Body:
-
-SC: 201
-
+	
 	{
-		type: SMS|PUSH_TAN|AUTO|PUSH_TAN_PREFERED
+		tanTransportType: SMS|PUSH_TAN|PUSH_TAN_PREFERED,
+		requestId: 'a id for a tanRequest | can be your process or a generated one'
 	}
 
+Response Body:
+
+SC: 201 Created
+
+
+	{
+		links: {
+			consume: "/rest/accounts/userid/tans/pequestId/{tan}"
+		}
+	}
 
 SC: 401
 SC: 400 unavalible Type
 
 ## Consume a TAN
 
-`DELETE /rest/accounts/{userid}/tans/{tan}`
+`DELETE /rest/accounts/{userid}/tans/{pequestId}/{tan}`
 Header: OAuth Authorization: user must match
 
-SC: 201
+SC: 204
 SC: 401
 
 ## Send SMS to a UserId (Request on DIKS System)

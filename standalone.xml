@@ -27,6 +27,10 @@
         <extension module="org.jboss.as.weld"/>
     </extensions>
 
+    <system-properties>
+        <property name="de.adorsys.tanserver.SystemSettings.TAN_DEV_HEADER" value="true"/>
+    </system-properties>
+
 
     <management>
         <security-realms>

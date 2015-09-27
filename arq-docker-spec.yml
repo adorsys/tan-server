@@ -1,25 +1,31 @@
 jboss:
-    image: docker.adorsys.de/adorsys/eap-full
-    await:
-      strategy: static
-      ip: boot2docker
-      ports: [8080]
-    exposedPorts:
-        - 9999/tcp
-        - 8080/tcp
-        - 8787/tcp
-        - 9990/tcp
-    portBindings:
-        - 9999/tcp
-        - 8787/tcp 
-        - 8080/tcp
-        - 9990/tcp
-    volumes: [/opt/jboss/standalone/configuration/standalone_xml_history]
-    links:
-      - mongodb:mongodb
-    binds:
-      - /Users/sso/Documents/dev/ww/tan-server/standalone.xml:/opt/jboss/standalone/configuration/standalone.xml:rw
-    cmd: [bash, -c, "/opt/jboss/bin/standalone.sh -b=0.0.0.0 -bmanagement=0.0.0.0 --debug"]
+  image: docker.adorsys.de/adorsys/eap-full
+  await:
+    strategy: static
+    ip: boot2docker
+    ports: [8080]
+  exposedPorts:
+      - 9999/tcp
+      - 8080/tcp
+      - 8787/tcp
+      - 9990/tcp
+  portBindings:
+      - 9999/tcp
+      - 8787/tcp 
+      - 8080/tcp
+      - 9990/tcp
+  volumes: [/opt/jboss/standalone/configuration/standalone_xml_history]
+  links:
+    - mongodb:mongodb
+  binds:
+    - /Users/sso/Documents/dev/ww/tan-server/standalone.xml:/opt/jboss/standalone/configuration/standalone.xml:rw
+  cmd: [bash, -c, "/opt/jboss/bin/standalone.sh -b=0.0.0.0 -bmanagement=0.0.0.0 --debug"]
+  beforeStop:
+    - log:
+        to: /Users/sso/Documents/dev/ww/tan-server/target/server.log
+        stdout: true
+        stderr: true
+        timestamps: true
 mongodb:
   image: mongo:3.1
   portBindings:
