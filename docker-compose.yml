@@ -1,0 +1,26 @@
+jboss:
+  image: docker.adorsys.de/adorsys/eap-full
+  ports:
+    - "9999:9999"
+    - "8080:8080"
+    - "80:80"
+    - "8787:8787"
+    - "9990:9990"
+    - "443:443"
+  expose:
+    - "9999"
+    - "8787"
+    - "80" 
+    - "8080"
+    - "443"
+  links:
+    - mongodb
+  volumes:
+    - ./target/tan-server.war:/opt/jboss/standalone/deployments/tan-server.war
+    - ./standalone.xml:/opt/jboss/standalone/configuration/standalone.xml
+    - /opt/jboss/standalone/configuration
+  command: bash -c "/opt/jboss/bin/standalone.sh -b=0.0.0.0 -bmanagement=0.0.0.0 --debug"
+mongodb:
+  image: mongo:3.1
+  ports:
+    - "27017:27017"
