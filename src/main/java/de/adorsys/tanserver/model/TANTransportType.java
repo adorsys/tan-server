@@ -13,21 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.adorsys.tanserver.rest.to;
+package de.adorsys.tanserver.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.adorsys.tanserver.model.TANTransportType;
-
-public class AccountTanStatusTo {
-	private Collection<TANTransportType> supportedTypes = new ArrayList<>();
-
-	public Collection<TANTransportType> getSupportedTypes() {
-		return supportedTypes;
-	}
-
-	public void setSupportedTypes(Collection<TANTransportType> supportedTypes) {
-		this.supportedTypes = supportedTypes;
-	}
+public enum TANTransportType {
+	SMS,
+	PUSH_TAN,
+	PUSH_TAN_PREFERED,
 }

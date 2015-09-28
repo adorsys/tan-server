@@ -5,7 +5,11 @@
 `POST /rest/accounts/{accountId}/push-device`
 Header: OAuth Authorization: user must match
 
-Response:
+Response Header:
+	
+	x-test-tan: if de.adorsys.tanserver.SystemSettings.TAN_DEV_HEADER sysprop is set to true
+	
+Response Body:
 SC: 200
 
 	{
@@ -13,6 +17,8 @@ SC: 200
 			"register-device": "/rest/tans/{userid}/push-device/{registrationId}"
 		}
 	}
+	
+SC: 404 unknown account
 
 ## Activate device registration with a TAN
 
@@ -53,6 +59,10 @@ Request Body:
 		requestId: 'a id for a tanRequest | can be your process or a generated one'
 	}
 
+Response Header:
+	
+	x-test-tan: if de.adorsys.tanserver.SystemSettings.TAN_DEV_HEADER sysprop is set to true
+	
 Response Body:
 
 SC: 201 Created
@@ -64,16 +74,16 @@ SC: 201 Created
 		}
 	}
 
-SC: 401
-SC: 400 unavalible Type
+SC: 404 unknown account
+SC: 422 unsupported Transport Type
 
 ## Consume a TAN
 
 `DELETE /rest/accounts/{userid}/tans/{pequestId}/{tan}`
 Header: OAuth Authorization: user must match
 
-SC: 204
-SC: 401
+SC: 204 tan accepted
+SC: 404 tan not known
 
 ## Send SMS to a UserId (outgoing request to send a SMS)
 
