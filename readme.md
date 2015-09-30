@@ -9,6 +9,7 @@
 ## Request register a new device
 
 `POST /rest/accounts/{accountId}/push-device`
+
 Header: OAuth Authorization: user must match
 
 Response Header:
