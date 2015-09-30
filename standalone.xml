@@ -29,7 +29,7 @@
 
     <system-properties>
         <property name="de.adorsys.tanserver.SystemSettings.TAN_DEV_HEADER" value="true"/>
-        <property name="de.adorsys.tanserver.SystemSettings.GCM_API_KEY" value="AAAA"/>
+        <property name="de.adorsys.tanserver.SystemSettings.GCM_API_KEY" value="AIzaSyDKXuisEG6mTfNmYPMI5Ip47h4AdGzahbo"/>
         <property name="de.adorsys.tanserver.SystemSettings.SMS_REST_ENDPOINT" value="http://localhost:8080/tan-server/rest/sms/{0}"/>
         <property name="de.adorsys.tanserver.SystemSettings.DEVICE_REG_TAN_TEMPLATE" value="Your devicereg TAN is {0}"/>
         <property name="de.adorsys.tanserver.SystemSettings.TAN_TEMPLATE" value="Your TAN is {0}"/>
