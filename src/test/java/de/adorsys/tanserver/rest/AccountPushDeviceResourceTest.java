@@ -25,6 +25,8 @@ import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
 import static org.hamcrest.Matchers.*;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.builder.RequestSpecBuilder;
@@ -38,11 +40,13 @@ import de.adorsys.tanserver.rest.to.ActivateDeviceRegistrationTo;
 
 public class AccountPushDeviceResourceTest extends BaseARTTest {
 	
+	private static Logger LOG = LoggerFactory.getLogger(AccountPushDeviceResourceTest.class);
+	
 	@Test
 	public void testRegisterANewDeviceAndCheckRegistation() {
-		Response tanReqestResponse = given().when().post("/rest/accounts/adorsys/push-device").then().statusCode(200).and().body("links['register-device']", endsWith("rest/rest/accounts/adorsys/push-device/REGID")).extract().response();
+		Response tanReqestResponse = given().when().post("/accounts/adorsys/push-device").then().statusCode(200).and().body("links['register-device']", endsWith("rest/accounts/adorsys/push-device/REGID")).extract().response();
 		String activationPath = tanReqestResponse.jsonPath().get("links['register-device']");
-		tanReqestResponse.prettyPrint();
+		LOG.debug(tanReqestResponse.prettyPrint());
 		assertNotNull("activationPath", activationPath);
 		String tan = tanReqestResponse.header("x-test-tan");
 		assertNotNull("tan", tan);
@@ -52,7 +56,7 @@ public class AccountPushDeviceResourceTest extends BaseARTTest {
 		activateDeviceRegistrationTo.setDeviceType(DeviceType.IOS);
 		given().body(activateDeviceRegistrationTo).when().post(activationPath.replaceAll("REGID", "xxxxxxxxx")).then().statusCode(204);
 		
-		given().when().get("/rest/accounts/{acountId}", "adorsys").then().statusCode(200).body("supportedTypes", contains("SMS", "PUSH_TAN"));
+		given().when().get("/accounts/{acountId}", "adorsys").then().statusCode(200).body("supportedTypes", contains("SMS", "PUSH_TAN"));
 	}
 
 }

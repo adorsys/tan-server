@@ -15,29 +15,18 @@
  */
 package de.adorsys.tanserver.rest;
 
-import static org.junit.Assert.*;
-
-import org.junit.Assert;
-import org.junit.Before;
-
-import static com.jayway.restassured.RestAssured.*;
-import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
-import static org.hamcrest.Matchers.*;
+import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.endsWith;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
+import org.junit.Test;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.config.ObjectMapperConfig;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.internal.mapper.ObjectMapperType;
+import com.jayway.restassured.filter.log.ErrorLoggingFilter;
 import com.jayway.restassured.response.Response;
 
 import de.adorsys.tanserver.model.TANTransportType;
-import de.adorsys.tanserver.rest.to.ActivateDeviceRegistrationTo;
 import de.adorsys.tanserver.rest.to.TANRequestTo;
-
-import org.junit.Test;
 
 public class AccountTANSResourceTest extends BaseARTTest {
 
@@ -47,13 +36,20 @@ public class AccountTANSResourceTest extends BaseARTTest {
 		TANRequestTo tanRequest = new TANRequestTo();
 		tanRequest.setRequestId("MyTransaction");
 		tanRequest.setTanTransportType(TANTransportType.PUSH_TAN_PREFERED);
-		Response tanReqestResponse = given().body(tanRequest).when().post("/rest/accounts/{accountId}/tans", "foobar").then().statusCode(200).and().body("links['register-device']", endsWith("rest/rest/accounts/adorsys/push-device/REGID")).extract().response();
-		String consumePath = tanReqestResponse.jsonPath().get("links['consume']");
-		assertNotNull("consumePath", consumePath);
+		Response tanReqestResponse = given().body(tanRequest).when().post("/accounts/{accountId}/tans", "foobar").then()
+				.statusCode(201).and()
+				.extract()
+				.response();
 		String tan = tanReqestResponse.header("x-test-tan");
 		assertNotNull("tan", tan);
+		String requestIdUrl = tanReqestResponse.header("Location");
+		Response requestIdResponse = given().when().get(requestIdUrl).then().statusCode(200).extract().response();
+		String consumePath = requestIdResponse.jsonPath().get("links['consume']");
+		assertNotNull("consumePath", consumePath);
 		
-		given().when().post(consumePath.replaceAll("TAN", tan)).then().statusCode(204);
+		
+		given().when().delete(consumePath.replaceAll("TAN", tan)).then().statusCode(204);
+		given().filter(new ErrorLoggingFilter()).when().delete(consumePath.replaceAll("TAN", tan)).then().statusCode(404);
 	}
 
 }

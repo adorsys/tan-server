@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Dependencies: org.slf4j,org.joda.time,com.google.guava,org.apache.comm
+ ons.io,org.apache.commons.lang,org.apache.httpcomponents,org.apache.c
+ ommons.codec
+Built-By: sso
+Build-Jdk: 1.7.0_71
+Created-By: Apache Maven 3.3.3
+Archiver-Version: Plexus Archiver

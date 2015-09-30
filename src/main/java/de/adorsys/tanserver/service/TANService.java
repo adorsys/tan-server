@@ -20,10 +20,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.adorsys.amp.gcm.client.GCMMessage.GCMNotification;
 import de.adorsys.amp.gcm.client.GCMService;
@@ -38,20 +41,24 @@ import de.adorsys.tanserver.repository.TANForAccountAndRequestIdRepository;
 
 @Singleton
 public class TANService {
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(TANService.class);
+
 	@Inject
 	TANForAccountAndRequestIdRepository tanRepo;
-	
+
 	@Inject
 	DeviceForAccountRepository deviceForAccountRepository;
-	
+
 	@Inject
 	GCMService gcmService;
-	
+
 	@Inject
 	SMSService smsService;
 
-	public String sendGeneratedTan(String authorization, String accountId, String requestId, TANTransportType transportType, String template) throws UnsupportedTransportType, UnknownAccountException {
+	public String sendGeneratedTan(@Nonnull String authorization, @Nonnull String accountId, @Nonnull String requestId,
+			@Nonnull TANTransportType transportType, @Nonnull String template)
+					throws UnsupportedTransportType, UnknownAccountException {
 		String tan = RandomStringUtils.random(4, "1234567890");
 		TANForAccountAndRequestId tanForAccountAndRequestId = new TANForAccountAndRequestId();
 		tanForAccountAndRequestId.setAccountId(accountId);
@@ -59,45 +66,52 @@ public class TANService {
 		tanForAccountAndRequestId.setTan(tan);
 		tanForAccountAndRequestId.setTimestamp(new Date());
 		tanRepo.save(tanForAccountAndRequestId);
-		
+
 		DeviceForAccount deviceForAccount = deviceForAccountRepository.get(accountId);
 		String message = MessageFormat.format(template, tan);
 		
-		switch(transportType) {
-			case PUSH_TAN:
-				if (deviceForAccount == null) {
-					throw new UnsupportedTransportType(accountId, transportType);
-				}
-			case PUSH_TAN_PREFERED:
+		switch (transportType) {
+		case PUSH_TAN:
+			if (deviceForAccount == null) {
+				throw new UnsupportedTransportType(accountId, transportType);
+			}
+			sendGCMNotification(deviceForAccount, message, tan);
+			break;
+		case PUSH_TAN_PREFERED:
+			if (deviceForAccount != null) {
 				sendGCMNotification(deviceForAccount, message, tan);
 				break;
-			case SMS:
-				sendSMSNotification(authorization, accountId, message, tan);
-				break;
+			}
+		case SMS:
+			sendSMSNotification(authorization, accountId, message, tan);
+			break;
 		}
-		
+
 		return tan;
 	}
 
-	private void sendSMSNotification(String authorization, String accountId, String message, String tan) throws UnknownAccountException {
+	private void sendSMSNotification(String authorization, String accountId, String message, String tan)
+			throws UnknownAccountException {
 		smsService.sendSMS(accountId, authorization, message);
-		
 	}
 
-	private void sendGCMNotification(DeviceForAccount deviceForAccount, String message, String tan) {
+	private void sendGCMNotification(@Nonnull DeviceForAccount deviceForAccount, @Nonnull String message,
+			@Nonnull String tan) {
 		GCMNotification notification = new GCMNotification();
 		notification.setTitle(message);
-		
+
 		Map<String, Object> data = new HashMap<>();
 		data.put("tan", tan);
 		try {
-			gcmService.sendNotification(notification, data, SystemSettings.GCM_API_KEY, deviceForAccount.getDeviceRegistrationId());
+			LOG.debug("gcmService {}", gcmService);
+			gcmService.sendNotification(notification, data, SystemSettings.GCM_API_KEY,
+					deviceForAccount.getDeviceRegistrationId());
 		} catch (UnknownRegistrationIdException | NotRegisteredException e) {
 			deviceForAccountRepository.delete(deviceForAccount);
 		}
 	}
 
-	public void consumeTAN(String accountId, String requestId, String tan)  throws InvalidTANException {
+	public void consumeTAN(String accountId, String requestId, String tan) throws InvalidTANException {
 		boolean wasFound = tanRepo.deleteTAN(accountId, requestId, tan);
 		if (!wasFound) {
 			throw new InvalidTANException();

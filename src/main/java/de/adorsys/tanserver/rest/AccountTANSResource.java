@@ -36,7 +36,7 @@ import de.adorsys.tanserver.service.UnknownAccountException;
 import de.adorsys.tanserver.service.UnsupportedTransportType;
 
 @Singleton
-@Path("/rest/accounts/{acountId}/tans")
+@Path("/accounts/{acountId}/tans")
 public class AccountTANSResource {
 	
 	@Inject
@@ -59,7 +59,7 @@ public class AccountTANSResource {
 	}
 	
 	@GET
-	@Path("/rest/accounts/{acountId}/tans/{requestId}")
+	@Path("{requestId}")
 	public TANRequestTo getTANRequest(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @Context UriInfo uriInfo) {
 		TANRequestTo tanRequestTo = new TANRequestTo();
 		tanRequestTo.getLinks().put("consume", uriInfo.getAbsolutePathBuilder().path("TAN").build());
@@ -67,8 +67,8 @@ public class AccountTANSResource {
 	}
 	
 	@DELETE
-	@Path("/rest/accounts/{acountId}/tans/{requestId}/{tan}")
-	public Response consumeTAN(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @PathParam("requestId") String tan, @Context UriInfo uriInfo) {
+	@Path("{requestId}/{tan}")
+	public Response consumeTAN(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @PathParam("tan") String tan, @Context UriInfo uriInfo) {
 		try {
 			tanService.consumeTAN(accountId, requestId, tan);
 			return Response.noContent().build();

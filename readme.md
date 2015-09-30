@@ -1,3 +1,9 @@
+# Build Instructions
+
+ * git build and clone amp https://github.com/adorsys/amp
+ * build tan-server `mvn clean install -DskipTests -PARQ`
+ * run it `docker-compose up`
+
 # REST API TAN-Server
 
 ## Request register a new device
@@ -23,7 +29,6 @@ SC: 404 unknown account
 ## Activate device registration with a TAN
 
 `POST /rest/accounts/{userid}/push-device/{registrationId}`
-Header: OAuth Authorization: user must match
 
 Request Body:
 

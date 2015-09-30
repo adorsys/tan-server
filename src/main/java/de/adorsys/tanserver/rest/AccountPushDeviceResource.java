@@ -15,7 +15,6 @@
  */
 package de.adorsys.tanserver.rest;
 
-import java.text.MessageFormat;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -41,7 +40,7 @@ import de.adorsys.tanserver.service.TANService;
 import de.adorsys.tanserver.service.UnknownAccountException;
 import de.adorsys.tanserver.service.UnsupportedTransportType;
 
-@Path("/rest/accounts/{accountId}/push-device")
+@Path("/accounts/{accountId}/push-device")
 @Singleton
 public class AccountPushDeviceResource {
 	

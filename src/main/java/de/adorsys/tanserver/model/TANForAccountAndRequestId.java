@@ -27,8 +27,8 @@ import org.mongodb.morphia.annotations.Indexes;
 
 @Entity(value="tans", noClassnameStored=true)
 @Indexes({
-	@Index(fields={@Field("accountId"), @Field("requestId"), @Field("tan")}, options = @IndexOptions(unique=true)),
-	@Index(fields={@Field("timestamp")}, options = @IndexOptions(unique=true, expireAfterSeconds=60))
+	@Index(fields={@Field("accountId"), @Field("requestId"), @Field("tan")}, options = @IndexOptions(unique=true, name="IDX_account_request_tan")),
+	@Index(fields={@Field("timestamp")}, options = @IndexOptions(unique=true, expireAfterSeconds=60, name="timestamp"))
 })
 public class TANForAccountAndRequestId {
 	@Id 

@@ -16,7 +16,6 @@
 package de.adorsys.tanserver.repository;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
@@ -24,15 +23,16 @@ import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
 
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
+import de.adorsys.tanserver.SystemSettings;
 import de.adorsys.tanserver.model.DeviceForAccount;
 import de.adorsys.tanserver.model.TANForAccountAndRequestId;
 
 @Singleton
 public class RepositoryFactory {
 	
-	@Resource(lookup="java:global/mongoClient")
-	private MongoClient client;
+	private MongoClient client = new MongoClient(new MongoClientURI(SystemSettings.MONGODB_URL));
 	private Datastore datastore;
 	
 	@PostConstruct

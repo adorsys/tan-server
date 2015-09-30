@@ -22,5 +22,6 @@ public class SystemSettings {
 	public static final String SMS_REST_ENDPOINT = System.getProperty("de.adorsys.tanserver.SystemSettings.SMS_REST_ENDPOINT");
 	public static final String DEVICE_REG_TAN_TEMPLATE = System.getProperty("de.adorsys.tanserver.SystemSettings.DEVICE_REG_TAN_TEMPLATE");
 	public static final String TAN_TEMPLATE = System.getProperty("de.adorsys.tanserver.SystemSettings.TAN_TEMPLATE");
+	public static final String MONGODB_URL = System.getProperty("de.adorsys.tanserver.SystemSettings.MONGODB_URL");
 
 }

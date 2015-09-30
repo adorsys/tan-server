@@ -30,9 +30,10 @@
     <system-properties>
         <property name="de.adorsys.tanserver.SystemSettings.TAN_DEV_HEADER" value="true"/>
         <property name="de.adorsys.tanserver.SystemSettings.GCM_API_KEY" value="AAAA"/>
-        <property name="de.adorsys.tanserver.SystemSettings.SMS_REST_ENDPOINT" value="/sms"/>
-        <property name="de.adorsys.tanserver.SystemSettings.DEVICE_REG_TAN_TEMPLATE" value="Your devicereg TAN is {}"/>
-        <property name="de.adorsys.tanserver.SystemSettings.TAN_TEMPLATE" value="Your TAN is {}"/>
+        <property name="de.adorsys.tanserver.SystemSettings.SMS_REST_ENDPOINT" value="http://localhost:8080/tan-server/rest/sms/{0}"/>
+        <property name="de.adorsys.tanserver.SystemSettings.DEVICE_REG_TAN_TEMPLATE" value="Your devicereg TAN is {0}"/>
+        <property name="de.adorsys.tanserver.SystemSettings.TAN_TEMPLATE" value="Your TAN is {0}"/>
+        <property name="de.adorsys.tanserver.SystemSettings.MONGODB_URL" value="mongodb://mongodb:27017"/>
     </system-properties>
 
 
@@ -95,7 +96,6 @@
     <profile>
         <subsystem xmlns="urn:jboss:domain:logging:1.5">
             <console-handler name="CONSOLE">
-                <level name="INFO"/>
                 <formatter>
                     <named-formatter name="COLOR-PATTERN"/>
                 </formatter>
@@ -111,7 +111,7 @@
             <logger category="com.arjuna">
                 <level name="WARN"/>
             </logger>
-            <logger category="de.teambank">
+            <logger category="de.adorsys.tanserver">
                 <level name="DEBUG"/>
             </logger>
             <logger category="org.apache.tomcat.util.modeler">
@@ -264,13 +264,6 @@
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:1.4">
-            <bindings>
-                <object-factory name="java:global/mongoClient" module="de.ktb.core.mongojndi" class="de.ktb.core.mongojndi.MongoClientObjectFactory">
-                    <environment>
-                        <property name="mongoURI" value="mongodb://mongodb:27017"/>
-                    </environment>
-                </object-factory>
-            </bindings>
             <remote-naming/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:pojo:1.0"/>
@@ -360,5 +353,4 @@
             <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
-
 </server>

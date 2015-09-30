@@ -30,7 +30,8 @@ jboss:
       - 8787/tcp 
       - 8080/tcp
       - 9990/tcp
-  volumes: [/opt/jboss/standalone/configuration/standalone_xml_history]
+  volumes:
+    - /opt/jboss/standalone/configuration/standalone_xml_history
   links:
     - mongodb:mongodb
   binds:

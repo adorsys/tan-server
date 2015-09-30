@@ -15,8 +15,13 @@
  */
 package de.adorsys.tanserver.service;
 
+import java.text.MessageFormat;
+
 import javax.inject.Singleton;
 import javax.ws.rs.core.MediaType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
@@ -26,14 +31,18 @@ import de.adorsys.tanserver.SystemSettings;
 
 @Singleton
 public class SMSService {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SMSService.class);
 
 	public void sendSMS(String accountId, String authorization, String message) throws UnknownAccountException {
-		HttpResponse<String> response;
 		try {
-			response = Unirest.post(SystemSettings.SMS_REST_ENDPOINT)
+			String uri = MessageFormat.format(SystemSettings.SMS_REST_ENDPOINT, accountId);
+			LOG.debug("call service {}", uri);
+			HttpResponse<String> response = Unirest.post(uri)
 					  .header("Authorization", authorization)
 					  .header("Content-Type", MediaType.TEXT_PLAIN)
 					  .body(message).asString();
+			LOG.debug("call response {} {}", response.getBody(), response.getStatus());
 			if (response.getStatus() == 204) {
 				return;
 			} else if (response.getStatus() == 404) {

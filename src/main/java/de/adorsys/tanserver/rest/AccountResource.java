@@ -29,7 +29,7 @@ import de.adorsys.tanserver.repository.DeviceForAccountRepository;
 import de.adorsys.tanserver.rest.to.AccountTanStatusTo;
 
 @Singleton
-@Path("/rest/accounts/{acountId}")
+@Path("/accounts/{acountId}")
 public class AccountResource {
 	
 	@Inject
