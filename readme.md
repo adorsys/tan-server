@@ -3,6 +3,12 @@
  * git build and clone amp https://github.com/adorsys/amp
  * build tan-server `mvn clean install -DskipTests -PARQ`
  * run it `docker-compose up`
+ 
+# TODOS
+
+ * Security warning in LOG out for TAN_DEV_HEADER in response
+ * Input validation
+ * OAuth authorization
 
 # REST API TAN-Server
 
@@ -25,6 +31,19 @@ SC: 200
 		}
 	}
 	
+CURL:
+
+	curl -X POST http://docker:8080/tan-server/rest/accounts/sso/push-device -H "accept:application/json" -i
+	
+	HTTP/1.1 200 OK
+	Server: Apache-Coyote/1.1
+	x-test-tan: 6793
+	Content-Type: application/json
+	Transfer-Encoding: chunked
+	Date: Wed, 30 Sep 2015 22:34:36 GMT
+	
+	{"links":{"register-device":"http://docker:8080/tan-server/rest/accounts/sso/push-device/REGID"}}
+	
 SC: 404 unknown account
 
 ## Activate device registration with a TAN
@@ -38,8 +57,19 @@ Request Body:
 		deviceType: "IOS|ANDROID"
 	}
 	
+Response:
+
 SC:201 OK no content
 SC:422 invalid TAN
+
+CURL:
+
+	curl -X POST http://docker:8080/tan-server/rest/accounts/sso/push-device/XXXXXXXX -H "Content-Type:application/json" -i --data "{\"activationTAN\":\"6262\", \"deviceType\":\"ANDROID\"}"
+	
+	HTTP/1.1 204 No Content
+	Server: Apache-Coyote/1.1
+	Date: Thu, 01 Oct 2015 06:40:04 GMT
+
 
 
 ## Check push options for user
@@ -82,6 +112,17 @@ SC: 201 Created
 
 SC: 404 unknown account
 SC: 422 unsupported Transport Type
+
+CURL
+
+	curl -X POST http://docker:8080/tan-server/rest/accounts/sso/tans -H "Content-Type:application/json" -i --data "{\"tanTransportType\":\"PUSH_TAN_PREFERED\", \"requestId\":\"MYTRANSACTION\"}"
+	
+	HTTP/1.1 201 Created
+	Server: Apache-Coyote/1.1
+	x-test-tan: 0018
+	Location: http://docker:8080/tan-server/rest/accounts/sso/tans/MYTRANSACTION
+	Content-Length: 0
+	Date: Thu, 01 Oct 2015 06:42:44 GMT
 
 ## Consume a TAN
 
