@@ -21,12 +21,26 @@
 		<version.arquillian_core>1.1.9.Final</version.arquillian_core>
 		<version.junit>4.12</version.junit>
 	</properties>
+	<scm>
+		<connection>scm:git@github.com:adorsys/tan-server.git</connection>
+		<developerConnection>scm:git:git@github.com:adorsys/tan-server.git</developerConnection>
+		<url>git@github.com:adorsys/tan-server.git</url>
+	</scm>
 	<licenses>
 		<license>
-			<name>ASL 2.0</name>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 	<inceptionYear>2015</inceptionYear>
+	<developers>
+		<developer>
+			<name>Sandro Sonntag</name>
+			<email>sso@adorsys.de</email>
+			<organization>adorsys</organization>
+			<organizationUrl>https://adorsys.de/</organizationUrl>
+		</developer>
+	</developers>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
