@@ -68,8 +68,8 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.adorsys.amp</groupId>
-			<artifactId>gcm.client</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<artifactId>amp-client</artifactId>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>
