@@ -80,14 +80,14 @@ public class AccountPushDeviceResource {
 						.path(AccountPushDeviceResource.class, "registerANewDevice").build(accountId, "REGID")
 						.toString());
 		try {
-			String tan = tanService.sendGeneratedTan(authorization, accountId, DEVICE_REGISTRATION_REQUESTID, TANTransportType.SMS, SystemSettings.DEVICE_REG_TAN_TEMPLATE);
+			String tan = tanService.sendGeneratedTan(authorization, accountId, DEVICE_REGISTRATION_REQUESTID, TANTransportType.EMAIL, SystemSettings.DEVICE_REG_TAN_TEMPLATE);
 			ResponseBuilder ok = Response.ok(deviceRegistrationRequestTo);
 			if (SystemSettings.TAN_DEV_HEADER) {
 				ok.header("x-test-tan", tan);
 			}
 			return ok.build();
 		} catch (UnsupportedTransportType e) {
-			throw new TANServerSystemException("Internal Error SMS sould be a supported type", e);
+			throw new TANServerSystemException("Internal Error EMAIL sould be a supported type", e);
 		} catch (UnknownAccountException e) {
 			return Response.serverError().status(404).entity("unknown account").build();
 		}

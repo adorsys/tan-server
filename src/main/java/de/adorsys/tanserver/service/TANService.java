@@ -56,6 +56,9 @@ public class TANService {
 	@Inject
 	SMSService smsService;
 
+	@Inject
+	EmailService emailService;
+
 	public String sendGeneratedTan(@Nonnull String authorization, @Nonnull String accountId, @Nonnull String requestId,
 			@Nonnull TANTransportType transportType, @Nonnull String template)
 					throws UnsupportedTransportType, UnknownAccountException {
@@ -82,6 +85,9 @@ public class TANService {
 				sendGCMNotification(deviceForAccount, message, tan);
 				break;
 			}
+		case EMAIL:
+			sendEmailNotification(authorization, accountId, message, tan);
+			break;
 		case SMS:
 			sendSMSNotification(authorization, accountId, message, tan);
 			break;
@@ -93,6 +99,11 @@ public class TANService {
 	private void sendSMSNotification(String authorization, String accountId, String message, String tan)
 			throws UnknownAccountException {
 		smsService.sendSMS(accountId, authorization, message);
+	}
+
+	private void sendEmailNotification(String authorization, String accountId, String message, String tan)
+			throws UnknownAccountException {
+		emailService.sendEmail(accountId, authorization, tan);
 	}
 
 	private void sendGCMNotification(@Nonnull DeviceForAccount deviceForAccount, @Nonnull String message,

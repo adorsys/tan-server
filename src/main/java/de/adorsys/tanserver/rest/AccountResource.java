@@ -40,9 +40,9 @@ public class AccountResource {
 		DeviceForAccount deviceForAccount = deviceRepo.get(accountId);
 		AccountTanStatusTo accountTanStatusTo = new AccountTanStatusTo();
 		if (deviceForAccount != null) {
-			accountTanStatusTo.setSupportedTypes(Arrays.asList(TANTransportType.SMS, TANTransportType.PUSH_TAN));
+			accountTanStatusTo.setSupportedTypes(Arrays.asList(TANTransportType.SMS, TANTransportType.EMAIL, TANTransportType.PUSH_TAN));
 		} else {
-			accountTanStatusTo.setSupportedTypes(Arrays.asList(TANTransportType.SMS));			
+			accountTanStatusTo.setSupportedTypes(Arrays.asList(TANTransportType.SMS, TANTransportType.EMAIL));			
 		}
 		return accountTanStatusTo;
 	}
