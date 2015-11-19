@@ -60,65 +60,70 @@ public class TANService {
 	EmailService emailService;
 
 	public String sendGeneratedTan(@Nonnull String authorization, @Nonnull String accountId, @Nonnull String requestId,
-			@Nonnull TANTransportType transportType, @Nonnull String template)
-					throws UnsupportedTransportType, UnknownAccountException {
+			@Nonnull TANTransportType transportType, @Nonnull String template) throws UnsupportedTransportType, UnknownAccountException,
+			UnknownRegistrationIdException, NotRegisteredException {
 		String tan = RandomStringUtils.random(4, "1234567890");
 		TANForAccountAndRequestId tanForAccountAndRequestId = new TANForAccountAndRequestId();
 		tanForAccountAndRequestId.setAccountId(accountId);
 		tanForAccountAndRequestId.setRequestId(requestId);
 		tanForAccountAndRequestId.setTan(tan);
 		tanForAccountAndRequestId.setTimestamp(new Date());
-		tanRepo.save(tanForAccountAndRequestId);
 
 		DeviceForAccount deviceForAccount = deviceForAccountRepository.get(accountId);
 		String message = MessageFormat.format(template, tan);
-		
+
+		LOG.debug("sending tan to {}", accountId);
+
 		switch (transportType) {
-		case PUSH_TAN:
-			if (deviceForAccount == null) {
-				throw new UnsupportedTransportType(accountId, transportType);
-			}
-			sendGCMNotification(deviceForAccount, message, tan);
-			break;
-		case PUSH_TAN_PREFERED:
-			if (deviceForAccount != null) {
+			case PUSH_TAN:
+				if (deviceForAccount == null) {
+					throw new UnsupportedTransportType(accountId, transportType);
+				}
 				sendGCMNotification(deviceForAccount, message, tan);
 				break;
-			}
-		case EMAIL:
-			sendEmailNotification(authorization, accountId, message, tan);
-			break;
-		case SMS:
-			sendSMSNotification(authorization, accountId, message, tan);
-			break;
+			case PUSH_TAN_PREFERED:
+				if (deviceForAccount != null) {
+					sendGCMNotification(deviceForAccount, message, tan);
+					break;
+				}
+			case EMAIL:
+				// 4 minutes longer for mail tan
+				tanForAccountAndRequestId.setTimestamp(new Date(tanForAccountAndRequestId.getTimestamp().getTime() + (4 * 60 * 1000)));
+				sendEmailNotification(authorization, accountId, message, tan);
+				break;
+			case SMS:
+				sendSMSNotification(authorization, accountId, message, tan);
+				break;
 		}
+		tanRepo.save(tanForAccountAndRequestId);
+		LOG.debug("sending tan - transportType {}, account {}, requestId {}", transportType, accountId, requestId);
 
 		return tan;
 	}
 
-	private void sendSMSNotification(String authorization, String accountId, String message, String tan)
-			throws UnknownAccountException {
+	private void sendSMSNotification(String authorization, String accountId, String message, String tan) throws UnknownAccountException {
 		smsService.sendSMS(accountId, authorization, message);
 	}
 
-	private void sendEmailNotification(String authorization, String accountId, String message, String tan)
-			throws UnknownAccountException {
+	private void sendEmailNotification(String authorization, String accountId, String message, String tan) throws UnknownAccountException {
 		emailService.sendEmail(accountId, authorization, tan);
 	}
 
-	private void sendGCMNotification(@Nonnull DeviceForAccount deviceForAccount, @Nonnull String message,
-			@Nonnull String tan) {
+	private void sendGCMNotification(@Nonnull DeviceForAccount deviceForAccount, @Nonnull String message, @Nonnull String tan)
+			throws UnknownRegistrationIdException, NotRegisteredException {
 		GCMNotification notification = new GCMNotification();
-		notification.setTitle(message);
+		notification.setTitle(SystemSettings.TAN_TITLE);
+		notification.setBody(message);
+		notification.setBadge("1");
 
 		Map<String, Object> data = new HashMap<>();
 		data.put("tan", tan);
 		try {
 			LOG.debug("gcmService {}", gcmService);
-			gcmService.sendNotification(notification, data, SystemSettings.GCM_API_KEY,
-					deviceForAccount.getDeviceRegistrationId());
+			gcmService.sendNotification(notification, data, SystemSettings.GCM_API_KEY, deviceForAccount.getDeviceRegistrationId());
 		} catch (UnknownRegistrationIdException | NotRegisteredException e) {
 			deviceForAccountRepository.delete(deviceForAccount);
+			throw e;
 		}
 	}
 
