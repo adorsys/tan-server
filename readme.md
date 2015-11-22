@@ -80,7 +80,7 @@ Header: OAuth Authorization: user must match
 Response Body
 
 	{
-		supportedTypes: [SMS, PUSH_TAN]
+		supportedTypes: [SMS, EMAIL, PUSH_TAN]
 	}
 
 ## Request a new TAN
@@ -91,7 +91,7 @@ Header: OAuth Authorization: user must match
 Request Body:
 	
 	{
-		tanTransportType: SMS|PUSH_TAN|PUSH_TAN_PREFERED,
+		tanTransportType: SMS|EMAIL|PUSH_TAN|PUSH_TAN_PREFERED,
 		requestId: 'a id for a tanRequest | can be your process or a generated one'
 	}
 

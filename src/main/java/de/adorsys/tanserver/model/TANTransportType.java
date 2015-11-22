@@ -17,6 +17,7 @@ package de.adorsys.tanserver.model;
 
 public enum TANTransportType {
 	SMS,
+	EMAIL,
 	PUSH_TAN,
-	PUSH_TAN_PREFERED,
+	PUSH_TAN_PREFERED
 }
