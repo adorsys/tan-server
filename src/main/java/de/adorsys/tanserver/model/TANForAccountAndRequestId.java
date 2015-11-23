@@ -26,11 +26,10 @@ import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.PreSave;
 
-@Entity(value="tans", noClassnameStored=true)
+@Entity(value = "tans", noClassnameStored = true)
 @Indexes({
-	@Index(fields={@Field("accountId"), @Field("requestId"), @Field("tan")}, options = @IndexOptions(unique=true, name="IDX_account_request_tan")),
-	@Index(fields={@Field("timestamp")}, options = @IndexOptions(unique=true, expireAfterSeconds=60, name="timestamp"))
-})
+		@Index(fields = { @Field("accountId"), @Field("requestId"), @Field("tan") }, options = @IndexOptions(unique = true, name = "IDX_account_request_tan")),
+		@Index(fields = { @Field("timestamp") }, options = @IndexOptions(unique = true, expireAfterSeconds = 60, name = "timestamp")) })
 public class TANForAccountAndRequestId {
 	@Id 
 	private ObjectId id;
@@ -42,30 +41,39 @@ public class TANForAccountAndRequestId {
 	public ObjectId getId() {
 		return id;
 	}
+
 	public void setId(ObjectId id) {
 		this.id = id;
 	}
+
 	public String getAccountId() {
 		return accountId;
 	}
+
 	public void setAccountId(String accountId) {
 		this.accountId = accountId;
 	}
+
 	public String getRequestId() {
 		return requestId;
 	}
+
 	public void setRequestId(String requestId) {
 		this.requestId = requestId;
 	}
+
 	public String getTan() {
 		return tan;
 	}
+
 	public void setTan(String tan) {
 		this.tan = tan;
 	}
+
 	public Date getTimestamp() {
 		return timestamp;
 	}
+
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}

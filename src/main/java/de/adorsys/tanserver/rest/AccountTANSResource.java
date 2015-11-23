@@ -28,6 +28,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import de.adorsys.amp.gcm.client.NotRegisteredException;
+import de.adorsys.amp.gcm.client.UnknownRegistrationIdException;
 import de.adorsys.tanserver.SystemSettings;
 import de.adorsys.tanserver.rest.to.TANRequestTo;
 import de.adorsys.tanserver.service.InvalidTANException;
@@ -38,16 +43,21 @@ import de.adorsys.tanserver.service.UnsupportedTransportType;
 @Singleton
 @Path("/accounts/{acountId}/tans")
 public class AccountTANSResource {
-	
+
 	@Inject
 	TANService tanService;
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(AccountTANSResource.class);
+
 	@POST
-	public Response tanRequest(@HeaderParam("Authorization") String authorization, @PathParam("acountId") String  accountId, TANRequestTo tanRequest, @Context UriInfo uriInfo) {
+	public Response tanRequest(@HeaderParam("Authorization") String authorization, @PathParam("acountId") String accountId, TANRequestTo tanRequest,
+			@Context UriInfo uriInfo) {
 		try {
-			String tan = tanService.sendGeneratedTan(authorization, accountId, tanRequest.getRequestId(), tanRequest.getTanTransportType(), SystemSettings.TAN_TEMPLATE);
+			String tan = tanService.sendGeneratedTan(authorization, accountId, tanRequest.getRequestId(), tanRequest.getTanTransportType(),
+					SystemSettings.TAN_TEMPLATE);
 			ResponseBuilder response = Response.created(uriInfo.getAbsolutePathBuilder().path(tanRequest.getRequestId()).build());
 			if (SystemSettings.TAN_DEV_HEADER) {
+				LOG.debug("TAN_DEV_HEADER property exists and is true");
 				response.header("x-test-tan", tan);
 			}
 			return response.build();
@@ -55,9 +65,11 @@ public class AccountTANSResource {
 			return Response.serverError().status(422).entity("unsupported Transport Type").build();
 		} catch (UnknownAccountException e) {
 			return Response.serverError().status(404).entity("unknown account").build();
+		} catch (UnknownRegistrationIdException | NotRegisteredException e) {
+			return Response.serverError().status(400).entity("not registered").build();
 		}
 	}
-	
+
 	@GET
 	@Path("{requestId}")
 	public TANRequestTo getTANRequest(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @Context UriInfo uriInfo) {
@@ -65,10 +77,11 @@ public class AccountTANSResource {
 		tanRequestTo.getLinks().put("consume", uriInfo.getAbsolutePathBuilder().path("TAN").build());
 		return tanRequestTo;
 	}
-	
+
 	@DELETE
 	@Path("{requestId}/{tan}")
-	public Response consumeTAN(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @PathParam("tan") String tan, @Context UriInfo uriInfo) {
+	public Response consumeTAN(@PathParam("acountId") String accountId, @PathParam("requestId") String requestId, @PathParam("tan") String tan,
+			@Context UriInfo uriInfo) {
 		try {
 			tanService.consumeTAN(accountId, requestId, tan);
 			return Response.noContent().build();

@@ -56,7 +56,7 @@ public class AccountPushDeviceResourceIT extends BaseARTTest {
 		activateDeviceRegistrationTo.setDeviceType(DeviceType.IOS);
 		given().body(activateDeviceRegistrationTo).when().post(activationPath.replaceAll("REGID", "xxxxxxxxx")).then().statusCode(204);
 		
-		given().when().get("/accounts/{acountId}", "adorsys").then().statusCode(200).body("supportedTypes", contains("SMS", "PUSH_TAN"));
+		given().when().get("/accounts/{acountId}", "adorsys").then().statusCode(200).body("supportedTypes", contains("SMS", "EMAIL", "PUSH_TAN"));
 	}
 
 }
