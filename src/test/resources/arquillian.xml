@@ -5,9 +5,11 @@
 	
 	<extension qualifier="docker">
 		<property name="serverVersion">1.12</property>
-		<property name="serverUri">https://boot2docker:2376</property>
+		<property name="serverUri">https://dockerHost:2376</property>
 		<property name="dockerContainersFile">arq-docker-spec.yml</property>
 		<property name="autoStartContainers">jboss,mongodb</property>
+		<property name="certPath">~/.docker/machine/machines/dev</property>
+		<property name="machineName">dev</property>
 	</extension>
 
 	<container qualifier="ARQDOCKER">

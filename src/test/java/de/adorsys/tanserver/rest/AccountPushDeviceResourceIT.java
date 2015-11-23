@@ -38,9 +38,9 @@ import com.jayway.restassured.response.Response;
 import de.adorsys.tanserver.model.DeviceType;
 import de.adorsys.tanserver.rest.to.ActivateDeviceRegistrationTo;
 
-public class AccountPushDeviceResourceTest extends BaseARTTest {
+public class AccountPushDeviceResourceIT extends BaseARTTest {
 	
-	private static Logger LOG = LoggerFactory.getLogger(AccountPushDeviceResourceTest.class);
+	private static Logger LOG = LoggerFactory.getLogger(AccountPushDeviceResourceIT.class);
 	
 	@Test
 	public void testRegisterANewDeviceAndCheckRegistation() {

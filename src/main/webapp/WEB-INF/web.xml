@@ -19,14 +19,12 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
   <display-name>tan-server</display-name>
   <session-config>
-    <session-timeout>30</session-timeout>
+    <session-timeout>0</session-timeout>
   </session-config>
-  <mime-mapping>
-    <extension>ico</extension>
-    <mime-type>image/x-icon</mime-type>
-  </mime-mapping>
-  <servlet-mapping>
-    <servlet-name>javax.ws.rs.core.Application</servlet-name>
-    <url-pattern>/rest/*</url-pattern>
-  </servlet-mapping>
+  <context-param>
+  	<param-name>resteasy.servlet.mapping.prefix</param-name>
+  	<param-value>/rest/*</param-value>
+  </context-param>
+
+  
 </web-app>

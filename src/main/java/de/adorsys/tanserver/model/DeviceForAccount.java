@@ -19,17 +19,18 @@ import java.util.Date;
 
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
+import org.mongodb.morphia.annotations.PreSave;
 
 @Entity("devices")
 public class DeviceForAccount {
 	@Id
-	String accountId;
+	private String accountId;
 
-	String deviceRegistrationId;
+	private String deviceRegistrationId;
 
-	DeviceType deviceType;
+	private DeviceType deviceType;
 
-	Date timestamp = new Date();
+	private Date timestamp;
 
 	public String getAccountId() {
 		return accountId;
@@ -61,6 +62,11 @@ public class DeviceForAccount {
 
 	public void setDeviceType(DeviceType deviceType) {
 		this.deviceType = deviceType;
+	}
+	
+	@PreSave
+	public void preSave() {
+		timestamp = new Date();
 	}
 
 }

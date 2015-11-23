@@ -18,7 +18,7 @@ jboss:
   image: docker.adorsys.de/adorsys/eap-full
   await:
     strategy: static
-    ip: boot2docker
+    ip: docker
     ports: [8080]
   exposedPorts:
       - 9999/tcp
@@ -35,11 +35,11 @@ jboss:
   links:
     - mongodb:mongodb
   binds:
-    - /Users/sso/Documents/dev/ww/tan-server/standalone.xml:/opt/jboss/standalone/configuration/standalone.xml:rw
+    - /Users/sso/Documents/dev/mobilepush/tan-server/standalone.xml:/opt/jboss/standalone/configuration/standalone.xml:rw
   cmd: [bash, -c, "/opt/jboss/bin/standalone.sh -b=0.0.0.0 -bmanagement=0.0.0.0 --debug"]
   beforeStop:
     - log:
-        to: /Users/sso/Documents/dev/ww/tan-server/target/server.log
+        to: /Users/sso/Documents/dev/mobilepush/tan-server/target/server.log
         stdout: true
         stderr: true
         timestamps: true
@@ -49,5 +49,5 @@ mongodb:
     - 27017/tcp
   await:
     strategy: static
-    ip: boot2docker
+    ip: docker
     ports: [27017]

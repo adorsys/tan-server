@@ -24,6 +24,7 @@ import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.Index;
 import org.mongodb.morphia.annotations.IndexOptions;
 import org.mongodb.morphia.annotations.Indexes;
+import org.mongodb.morphia.annotations.PreSave;
 
 @Entity(value="tans", noClassnameStored=true)
 @Indexes({
@@ -32,11 +33,12 @@ import org.mongodb.morphia.annotations.Indexes;
 })
 public class TANForAccountAndRequestId {
 	@Id 
-	ObjectId id;
-	String accountId;
-	String requestId;
-	String tan;
-	Date timestamp;
+	private ObjectId id;
+	private String accountId;
+	private String requestId;
+	private String tan;
+	private Date timestamp;
+	
 	public ObjectId getId() {
 		return id;
 	}
@@ -66,6 +68,11 @@ public class TANForAccountAndRequestId {
 	}
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	@PreSave
+	public void preSave() {
+		timestamp = new Date();
 	}
 	
 }

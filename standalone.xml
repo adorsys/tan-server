@@ -114,6 +114,9 @@
             <logger category="de.adorsys.tanserver">
                 <level name="DEBUG"/>
             </logger>
+            <logger category="org.jboss.resteasy">
+                <level name="DEBUG"/>
+            </logger>
             <logger category="org.apache.tomcat.util.modeler">
                 <level name="WARN"/>
             </logger>

@@ -40,7 +40,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.internal.mapper.ObjectMapperType;
 
 @RunWith(Arquillian.class)
-public class BaseARTTest {
+public abstract class BaseARTTest {
 
 	private static final String WEBAPP_SRC = "src/main/webapp";
 	private static final Logger LOG = LoggerFactory.getLogger(BaseARTTest.class);
@@ -68,6 +68,7 @@ public class BaseARTTest {
 	    res.addPackages(true, "de.adorsys.tanserver");
 	    res.setWebXML(new File(WEBAPP_SRC, "WEB-INF/web.xml"));
 	    res.addAsWebResource(new File(WEBAPP_SRC, "WEB-INF/beans.xml"), "WEB-INF/beans.xml");
+	    res.addAsWebResource(new File(WEBAPP_SRC, "WEB-INF/jboss-deployment-structure.xml"), "WEB-INF/jboss-deployment-structure.xml");
 	    res.addAsManifestResource("MANIFEST.MF");
 	    // Show the deploy structure
 	    LOG.debug(res.toString(true)); 

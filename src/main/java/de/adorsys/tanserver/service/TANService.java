@@ -15,6 +15,7 @@
  */
 package de.adorsys.tanserver.service;
 
+import java.security.SecureRandom;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +43,8 @@ import de.adorsys.tanserver.repository.TANForAccountAndRequestIdRepository;
 @Singleton
 public class TANService {
 
+	private static final SecureRandom RANDOM = new SecureRandom();
+
 	private static final Logger LOG = LoggerFactory.getLogger(TANService.class);
 
 	@Inject
@@ -59,7 +62,7 @@ public class TANService {
 	public String sendGeneratedTan(@Nonnull String authorization, @Nonnull String accountId, @Nonnull String requestId,
 			@Nonnull TANTransportType transportType, @Nonnull String template)
 					throws UnsupportedTransportType, UnknownAccountException {
-		String tan = RandomStringUtils.random(4, "1234567890");
+		String tan = RandomStringUtils.random(4, 0, 10, false, false, "1234567890".toCharArray(), RANDOM);
 		TANForAccountAndRequestId tanForAccountAndRequestId = new TANForAccountAndRequestId();
 		tanForAccountAndRequestId.setAccountId(accountId);
 		tanForAccountAndRequestId.setRequestId(requestId);
