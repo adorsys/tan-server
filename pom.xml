@@ -12,6 +12,9 @@
 	<artifactId>tan-server</artifactId>
 	<version>0.10-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<name>TAN Server Component</name>
+	<description>A generic TAN Server with support for SMS and Mobile Push TAN - actually jboss only</description>
+	<url>https://github.com/adorsys/tan-server</url>
 	<properties>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -67,9 +70,9 @@
 	</dependencyManagement>
 	<dependencies>
 		<dependency>
-			<groupId>de.adorsys.amp</groupId>
-			<artifactId>amp-client</artifactId>
-			<version>0.3</version>
+		    <groupId>de.adorsys.amp</groupId>
+		    <artifactId>amp-client</artifactId>
+		    <version>0.4.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mashape.unirest</groupId>
@@ -260,6 +263,7 @@
 					</execution>
 				</executions>
 				<configuration>
+				 	<skipTests>true</skipTests>
 					<systemPropertyVariables>
 						<arquillian.launch>ARQDOCKER</arquillian.launch>
 					</systemPropertyVariables>
