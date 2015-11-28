@@ -314,12 +314,6 @@
 					<version>1.12</version>
 					<scope>test</scope>
 				</dependency>
-				<dependency>
-					<groupId>org.jboss.spec.javax.ws.rs</groupId>
-					<artifactId>jboss-jaxrs-api_2.0_spec</artifactId>
-					<version>1.0.0.Final</version>
-					<scope>provided</scope>
-				</dependency>
 			</dependencies>
 		</profile>
 		<profile>
