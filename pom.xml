@@ -10,7 +10,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.adorsys.tanserver</groupId>
 	<artifactId>tan-server</artifactId>
-	<version>0.11</version>
+	<version>0.12-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>TAN Server Component</name>
 	<description>A generic TAN Server with support for SMS and Mobile Push TAN - actually jboss only</description>
@@ -27,7 +27,7 @@
 		<connection>scm:git@github.com:adorsys/tan-server.git</connection>
 		<developerConnection>scm:git:git@github.com:adorsys/tan-server.git</developerConnection>
 		<url>git@github.com:adorsys/tan-server.git</url>
-	  <tag>tan-server-0.11</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<licenses>
 		<license>
