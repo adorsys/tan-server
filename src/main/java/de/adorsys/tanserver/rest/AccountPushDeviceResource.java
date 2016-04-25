@@ -23,7 +23,9 @@ import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
@@ -80,7 +82,6 @@ public class AccountPushDeviceResource {
 		deviceRepo.save(deviceForAccount);
 
 		return Response.noContent().build();
-
 	}
 
 	@POST
@@ -107,13 +108,12 @@ public class AccountPushDeviceResource {
 	}
 
 	@POST
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response requestRegisterANewDevice(@HeaderParam("Authorization") String authorization, @PathParam("accountId") String accountId,
 			@Context UriInfo uriInfo) {
 		DeviceRegistrationRequestTo deviceRegistrationRequestTo = new DeviceRegistrationRequestTo();
-		deviceRegistrationRequestTo.getLinks().put(
-				"register-device",
-				uriInfo.getBaseUriBuilder().path(AccountPushDeviceResource.class).path(AccountPushDeviceResource.class, "registerANewDevice")
-						.build(accountId, "REGID").toString());
+		deviceRegistrationRequestTo.getLinks().put("register-device", uriInfo.getBaseUriBuilder().path(AccountPushDeviceResource.class)
+				.path(AccountPushDeviceResource.class, "registerANewDevice").build(accountId, "REGID").toString());
 		try {
 			String tan = tanService.sendGeneratedTan(authorization, accountId, DEVICE_REGISTRATION_REQUESTID,
 					TANTransportType.valueOf(SystemSettings.DEVICE_REG_TAN_TRANSPORT_TYPE), SystemSettings.DEVICE_REG_TAN_TEMPLATE);
